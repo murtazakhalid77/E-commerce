@@ -21,9 +21,10 @@ public class Product {
     private  String productName;
     private  Double cost;
     private   Double price;
-    private   String image;
+    @OneToOne
+    @JoinColumn(name = "image",referencedColumnName ="id")
+    private  Image image;
     private  Double stock;
-
     @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<ProductCart> productCartList;

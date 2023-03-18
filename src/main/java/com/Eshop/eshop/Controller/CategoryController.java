@@ -16,34 +16,35 @@ import java.util.Map;
 @RequestMapping("/api")
 @Controller
 public class CategoryController {
-    private final ICategoryService ICategoryService;
+    private final ICategoryService categoryService;
 
-    public CategoryController(ICategoryService ICategoryService) {
-        this.ICategoryService = ICategoryService;
+    public CategoryController(ICategoryService categoryService) {
+        this.categoryService = categoryService;
     }
-
-
-
     @GetMapping("/category")
     private ResponseEntity<List<CategoryDTO>> getAll(){
-        return ResponseEntity.ok(ICategoryService.getAllCategory());
+        return ResponseEntity.ok(categoryService.getAllCategory());
     }
     @PostMapping("/category")
     private ResponseEntity<CategoryDTO> addCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
-        return ResponseEntity.ok(ICategoryService.addCategory(categoryDTO));
+        return ResponseEntity.ok(categoryService.addCategory(categoryDTO));
     }
 
     @GetMapping("/category/{id}")
     private ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
-        return ResponseEntity.ok(ICategoryService.getCategoryById(id));
+        return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
     @PatchMapping("/category/{id}")
     private ResponseEntity<CategoryDTO> updateCategoryById(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        return ResponseEntity.ok(ICategoryService.updateCategoryById(id,fields));
+        return ResponseEntity.ok(categoryService.updateCategoryById(id,fields));
     }
-    @PutMapping("/category/{id}")
+    @DeleteMapping  ("/category/{id}")
     private ResponseEntity<CategoryDTO> deleteCategoryById(@PathVariable Long id) {
-        return ResponseEntity.ok(ICategoryService.deleteCategoryId(id));
+        return ResponseEntity.ok(categoryService.deleteCategoryId(id));
+    }
+        @GetMapping("/searchCategory/{searchCategory}")
+    private ResponseEntity<List<CategoryDTO>> getCatgoryBySearch(@PathVariable String searchByName) {
+        return ResponseEntity.ok(categoryService.getCategoryBySearch(searchByName));
     }
 }

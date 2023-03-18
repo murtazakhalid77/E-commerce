@@ -54,7 +54,7 @@ public class CartegoryServiceImplI implements ICategoryService {
     }
     @Override
     public List<CategoryDTO> getAllCategory() {
-      return   categoryRepository.findAllByIsActive(true).stream().map(c->toDto(c)).collect(Collectors.toList());
+      return   categoryRepository.findAll().stream().map(c->toDto(c)).collect(Collectors.toList());
     }
 
     @Override
@@ -68,6 +68,15 @@ public class CartegoryServiceImplI implements ICategoryService {
             });
             return toDto(categoryRepository.save(category));
 
+    }
+
+    @Override
+    public List<CategoryDTO> getCategoryBySearch(String searchByName) {
+         Optional<List<Category>> foundedCategory = categoryRepository.searchByCategoryName(searchByName);
+         if (foundedCategory!=null){
+             return foundedCategory.get().stream().map(c->toDto(c)).collect(Collectors.toList());
+         }
+         throw new RecordNotFoundException(String.format("The category %s is not available" +searchByName));
     }
 
     @Override

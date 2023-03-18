@@ -37,4 +37,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<Map<String,String>>(errors,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value =FileNotUploadedException.class)
+    public ResponseEntity<ErrorMessage> fileNotUploadedSucessfullyException(FileNotUploadedException ex){
+        ErrorMessage errorMessage = ErrorMessage.builder()
+                .body(ex.getMessage()).localDateTime(LocalDateTime.now()).build();
+        return new ResponseEntity(errorMessage, HttpStatus.NOT_FOUND);
+    }
 }

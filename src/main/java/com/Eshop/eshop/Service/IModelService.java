@@ -15,6 +15,8 @@ public interface IModelService {
 
     ModelDTO updateModelrById(Long id, Map<String, Object> fields);
 
-    ModelDTO deleteModelById(Long id);
+    ModelDTO changeAvailabilityById(Long id);
+
+    List<ModelDTO> searchModel(String modelName);
 }
 

@@ -4,6 +4,7 @@ import com.Eshop.eshop.Dto.CouponDTO;
 import com.Eshop.eshop.Exception.RecordAlreadyExistException;
 import com.Eshop.eshop.Exception.RecordNotFoundException;
 import com.Eshop.eshop.Service.ICouponService;
+import com.Eshop.eshop.domain.Category;
 import com.Eshop.eshop.domain.Coupon;
 import com.Eshop.eshop.repositories.CouponRepository;
 import org.modelmapper.ModelMapper;
@@ -29,7 +30,7 @@ public class CouponServiceImpl implements ICouponService {
 
     @Override
     public List<CouponDTO> getAllCoupons() {
-      return this.couponRepository.findAllByisActive(true).stream().map(c->toDto(c)).collect(Collectors.toList());
+      return this.couponRepository.findAll().stream().map(c->toDto(c)).collect(Collectors.toList());
     }
 
     @Override
@@ -60,7 +61,30 @@ public class CouponServiceImpl implements ICouponService {
     }
 
     @Override
-    public CouponDTO updateCategoryById(Long id, Map<String, Object> fields) {
+    public CouponDTO deleteCouponById(Long id) {
+        Optional<Coupon> coupon = couponRepository.findById(id);
+        if (coupon.isPresent()){
+            if (!coupon.get().getIsActive()){
+                coupon.get().setIsActive(true);
+                return toDto(couponRepository.save(coupon.get()));
+            }
+            coupon.get().setIsActive(false);
+            return toDto(couponRepository.save(coupon.get()));
+        }
+        throw new RecordNotFoundException(String.format("Coupon Not Found On this Id => %d",id));
+    }
+
+    @Override
+    public List<CouponDTO> getCouponBySearch(String couponCode) {
+        Optional<List<Coupon>> foundedCoupons = couponRepository.searchByCouponCode(couponCode);
+        if (foundedCoupons!=null){
+            return foundedCoupons.get().stream().map(c->toDto(c)).collect(Collectors.toList());
+        }
+        throw new RecordNotFoundException(String.format("The coupon %s is not available" +couponCode));
+    }
+
+    @Override
+    public CouponDTO updateCouponById(Long id, Map<String, Object> fields) {
         Coupon coupon = couponRepository.findById(id).get();
         fields.forEach((key,value)->{
             Field field = ReflectionUtils.findField(Coupon.class,key);
@@ -69,17 +93,6 @@ public class CouponServiceImpl implements ICouponService {
             ReflectionUtils.setField(field,coupon,value);
         });
         return toDto(couponRepository.save(coupon));
-    }
-
-    @Override
-    public CouponDTO deleteCouponById(Long id) {
-        Optional<Coupon> coupon = couponRepository.findById(id);
-        if (coupon.isPresent()){
-            coupon.get().setIsActive(false);
-            return toDto(couponRepository.save(coupon.get()));
-        }
-        throw new RecordNotFoundException(String.format("Coupon Not Found On this Id => %d",id));
-
     }
 
 

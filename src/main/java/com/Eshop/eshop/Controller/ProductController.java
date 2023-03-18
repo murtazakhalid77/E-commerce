@@ -7,7 +7,10 @@ import com.Eshop.eshop.Service.IProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +29,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
     @PostMapping("/product")
-    ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO){
+    ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO) {
         return  ResponseEntity.ok(productService.addProduct(productDTO));
     }
     @GetMapping("/product/{id}")

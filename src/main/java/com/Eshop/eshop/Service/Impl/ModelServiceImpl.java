@@ -31,7 +31,7 @@ public class ModelServiceImpl implements IModelService {
 
     @Override
     public List<ModelDTO> getAllModels() {
-        return modelRepository.findAllByIsActive(true).stream().map(c->toDto(c)).collect(Collectors.toList());
+        return modelRepository.findAll().stream().map(c->toDto(c)).collect(Collectors.toList());
     }
 
     @Override
@@ -74,14 +74,29 @@ public class ModelServiceImpl implements IModelService {
     }
 
     @Override
-    public ModelDTO deleteModelById(Long id) {
+    public ModelDTO changeAvailabilityById(Long id) {
         Optional<Model> model = modelRepository.findById(id);
         if (model.isPresent()){
+            if(!model.get().getIsActive()){
+                model.get().setIsActive(true);
+                return toDto(modelRepository.save(model.get()));
+            }
             model.get().setIsActive(false);
             return toDto(modelRepository.save(model.get()));
         }
         throw new RecordNotFoundException(String.format("model Not Found On this Id => %d",id));
     }
+
+    @Override
+    public List<ModelDTO> searchModel(String modelName) {
+        Optional<List<Model>> models = modelRepository.searchByName(modelName);
+        if (modelName != null) {
+            return models.get().stream().map(c->toDto(c)).collect(Collectors.toList());
+        }
+        throw new RecordNotFoundException("The model you are searching does Not Exists");
+    }
+
+
     public Model toDomain(ModelDTO modelDTO){
         return modelMapper.map(modelDTO,Model.class);
     }

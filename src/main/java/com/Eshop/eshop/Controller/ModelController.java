@@ -24,10 +24,12 @@ public class ModelController {
     public ModelController(IModelService modelService) {
         this.modelService = modelService;
     }
+
     @GetMapping("/model")
-    private ResponseEntity<List<ModelDTO>> getAll(){
+    private ResponseEntity<List<ModelDTO>> getAll() {
         return ResponseEntity.ok(modelService.getAllModels());
     }
+
     @PostMapping("/model")
     private ResponseEntity<ModelDTO> addModel(@Valid @RequestBody ModelDTO modelDTO) {
         return ResponseEntity.ok(modelService.addModel(modelDTO));
@@ -40,10 +42,18 @@ public class ModelController {
 
     @PatchMapping("/model/{id}")
     private ResponseEntity<ModelDTO> updateModelById(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        return ResponseEntity.ok(modelService.updateModelrById(id,fields));
+        return ResponseEntity.ok(modelService.updateModelrById(id, fields));
     }
+
     @PutMapping("/model/{id}")
-    private ResponseEntity<ModelDTO> deleteModelById(@PathVariable Long id) {
-        return ResponseEntity.ok(modelService.deleteModelById(id));
+    private ResponseEntity<ModelDTO> changeAvailability(@PathVariable Long id) {
+        return ResponseEntity.ok(modelService.changeAvailabilityById(id));
     }
+
+    @GetMapping("/searchModel/{modelName}")
+    private ResponseEntity<List<ModelDTO>> searchModel(@PathVariable("modelName") String modelName) {
+        return ResponseEntity.ok(modelService.searchModel(modelName));
+
+    }
+
 }

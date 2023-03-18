@@ -13,7 +13,9 @@ public interface ICouponService {
 
     CouponDTO getCouponById(Long id);
 
-    CouponDTO updateCategoryById(Long id,Map<String, Object> fields);
-
     CouponDTO deleteCouponById(Long id);
+
+    List<CouponDTO> getCouponBySearch(String couponCode);
+
+    CouponDTO updateCouponById(Long id, Map<String, Object> fields);
 }

@@ -17,4 +17,6 @@ public interface ICategoryService {
     CategoryDTO deleteCategoryId(Long id);
 
     CategoryDTO updateCategoryById(Long id,Map<String,Object> fields);
+
+    List<CategoryDTO> getCategoryBySearch(String searchByName);
 }

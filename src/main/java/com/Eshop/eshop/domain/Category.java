@@ -1,7 +1,7 @@
 package com.Eshop.eshop.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;

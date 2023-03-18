@@ -1,17 +1,20 @@
 package com.Eshop.eshop.Service.Impl;
 
-import com.Eshop.eshop.Dto.ModelDTO;
+import com.Eshop.eshop.Dto.ImageDto;
 import com.Eshop.eshop.Dto.ProductDTO;
 import com.Eshop.eshop.Exception.RecordAlreadyExistException;
 import com.Eshop.eshop.Exception.RecordNotFoundException;
 import com.Eshop.eshop.Service.IProductService;
+import com.Eshop.eshop.domain.Image;
 import com.Eshop.eshop.domain.Model;
 import com.Eshop.eshop.domain.Product;
 import com.Eshop.eshop.repositories.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,7 @@ public class ProductServiceImpl implements IProductService {
 
     public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
+
         this.modelMapper = modelMapper;
     }
 
@@ -33,7 +37,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductDTO addProduct(ProductDTO productDTO) {
+    public ProductDTO addProduct(ProductDTO productDTO)  {
     Product dublicateProduct =productRepository.findByProductNameAndModel(productDTO.getProductName(),productDTO.getModel());
         if (dublicateProduct!=null){
             if (!dublicateProduct.getIsActive()){
@@ -42,6 +46,13 @@ public class ProductServiceImpl implements IProductService {
             }
             throw new RecordAlreadyExistException(String.format("Product Already exist by this name and model %s",dublicateProduct));
         }
+//        ImageDto imageDto  =toImageDto((imageRepository.save(Image.builder()
+//                .imageName(file.getOriginalFilename())
+//                .type(file.getContentType())
+//                .imageData(ImageUtil.compressImage(file. getBytes()))
+//                .build())));
+//        productDTO.setImage(toImageDomain(imageDto));
+        //productDTO.setImage();
         productDTO.setIsActive(true);
        return toDto(productRepository.save(toDomain(productDTO)));
     }
@@ -84,5 +95,11 @@ public class ProductServiceImpl implements IProductService {
     }
     public  ProductDTO toDto(Product product){
         return modelMapper.map(product,ProductDTO.class);
+    }
+    ImageDto toImageDto(Image image){
+        return modelMapper.map(image,ImageDto.class);
+    }
+    Image toImageDomain(ImageDto imageDto){
+        return modelMapper.map(imageDto,Image.class);
     }
 }
